@@ -1,8 +1,7 @@
 const router = require('express').Router();
-const sequelize = require('../config/connection');
-const { Post, User, Comment, Vote } = require('../models');
 
-// get all posts for homepage
+const { Post, User, Comment } = require('../models');
+
 router.get('/', (req, res) => {
   console.log('======================');
   Post.findAll({
@@ -11,7 +10,6 @@ router.get('/', (req, res) => {
       'post_url',
       'title',
       'created_at',
-      [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']
     ],
     include: [
       {
@@ -42,7 +40,6 @@ router.get('/', (req, res) => {
     });
 });
 
-// get single post
 router.get('/post/:id', (req, res) => {
   Post.findOne({
     where: {
@@ -53,7 +50,6 @@ router.get('/post/:id', (req, res) => {
       'post_url',
       'title',
       'created_at',
-      [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']
     ],
     include: [
       {
